@@ -105,10 +105,9 @@ public static class OperationalHistorySeeder
         }
 
         // 3. ASSET MOVEMENTS - 10 DATA
-
-        var existingMovements = await context.AssetMovements
-            .Select(x => new { x.AssetId, x.MovementDate })
-            .ToListAsync(cancellationToken);
+        var existingMovementIds = await context.AssetMovements
+    .Select(x => x.Id)
+    .ToHashSetAsync(cancellationToken);
 
         var locationList = locations.Values
             .OrderBy(x => x.Code)
@@ -124,33 +123,36 @@ public static class OperationalHistorySeeder
         {
             var asset = assets[assetCodes[i]];
 
-            var destinationLocation = GetRequired(
-                locations,
-                asset.LocationId == Guid.Empty
-                    ? string.Empty
-                    : locationList.First(x => x.Id == asset.LocationId).Code,
-                "Location");
+            var destinationLocation = locationList.FirstOrDefault(
+                x => x.Id == asset.LocationId);
 
-            // Catat perpindahan historis menuju lokasi aset saat ini.
+            if (destinationLocation == null)
+            {
+                throw new InvalidOperationException(
+                    $"Lokasi aset {asset.AssetCode} tidak ditemukan.");
+            }
+
             var fromLocation = locationList.FirstOrDefault(
                 x => x.Id != destinationLocation.Id);
 
             if (fromLocation == null)
+            {
                 throw new InvalidOperationException(
-                    "At least two locations are required for asset movement.");
+                    "Minimal dibutuhkan dua lokasi untuk asset movement.");
+            }
+
+            // Gunakan ID tetap sebagai identitas seed.
+            var movementId = CreateId("A2000000", i + 1);
+
+            // Cek berdasarkan primary key, bukan tanggal.
+            if (existingMovementIds.Contains(movementId))
+                continue;
 
             var movementDate = DateTimeOffset.UtcNow.AddDays(-30 + i);
 
-            var alreadyExists = existingMovements.Any(x =>
-                x.AssetId == asset.Id &&
-                x.MovementDate == movementDate);
-
-            if (alreadyExists)
-                continue;
-
             assetMovements.Add(new AssetMovement
             {
-                Id = CreateId("A2000000", i + 1),
+                Id = movementId,
                 AssetId = asset.Id,
                 FromLocationId = fromLocation.Id,
                 ToLocationId = destinationLocation.Id,
@@ -321,7 +323,7 @@ public static class OperationalHistorySeeder
     }
 
     // HELPER METHODS
-    private static T GetRequired<T>(Dictionary<string, T> dictionary,string key,string entityName)
+    private static T GetRequired<T>(Dictionary<string, T> dictionary, string key, string entityName)
     {
         if (!dictionary.TryGetValue(key, out var result))
         {

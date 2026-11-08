@@ -2,6 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using Logistics.Infrastructure.Persistence;
 using Logistics.Infrastructure.Persistence.Seed;
 using Microsoft.Extensions.DependencyInjection;
+using Logistics.Application.Interfaces.Inventory;
+using Logistics.Application.Services.Inventory;
+using Logistics.Infrastructure.Persistence.Repositories.Inventory;
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -9,11 +12,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<LogisticsDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")
     )
 );
-
+builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
+builder.Services.AddScoped<IInventoryService, InventoryService>();
 var app = builder.Build();
 
 
@@ -32,7 +37,8 @@ await using (var scope = app.Services.CreateAsyncScope())
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
