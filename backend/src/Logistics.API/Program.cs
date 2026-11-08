@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Logistics.Infrastructure.Persistence;
+using Logistics.Infrastructure.Persistence.Seed;
+using Microsoft.Extensions.DependencyInjection;
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -13,6 +15,19 @@ builder.Services.AddDbContext<LogisticsDbContext>(options => options.UseNpgsql(b
 );
 
 var app = builder.Build();
+
+
+// DATABASE SEEDING
+await using (var scope = app.Services.CreateAsyncScope())
+{
+    var dbContext = scope.ServiceProvider
+        .GetRequiredService<LogisticsDbContext>();
+
+    await DatabaseSeeder.SeedAsync(
+        dbContext,
+        app.Lifetime.ApplicationStopping);
+}
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
