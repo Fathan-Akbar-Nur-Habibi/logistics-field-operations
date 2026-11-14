@@ -8,6 +8,9 @@ using Logistics.Infrastructure.Persistence.Repositories.Inventory;
 using Logistics.Application.Interfaces.Asset;
 using Logistics.Infrastructure.Persistence.Repositories.Asset;
 using Logistics.Application.Services.Asset;
+using Logistics.Application.Interfaces.Maintenance;
+using Logistics.Application.Services.Maintenance;
+using Logistics.Infrastructure.Persistence.Repositories.Maintenance;
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -25,6 +28,9 @@ builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IAssetRepository, AssetRepository>();
 builder.Services.AddScoped<IAssetRepository, AssetRepository>();
 builder.Services.AddScoped<IAssetService, AssetService>();
+// Maintenance
+builder.Services.AddScoped<IMaintenanceRepository, MaintenanceRepository>();
+builder.Services.AddScoped<IMaintenanceService, MaintenanceService>();
 var app = builder.Build();
 
 
