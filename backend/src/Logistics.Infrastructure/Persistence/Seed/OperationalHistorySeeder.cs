@@ -23,6 +23,23 @@ public static class OperationalHistorySeeder
         var assets = await context.Assets
             .ToDictionaryAsync(x => x.AssetCode, cancellationToken);
 
+
+        // Ambil hanya 10 asset bawaan dari OperationalDataSeeder.
+        // Asset demo menggunakan GUID dengan prefix 90000000.
+        var demoAssets = assets.Values
+            .Where(x => x.Id.ToString().StartsWith(
+                "90000000-",
+                StringComparison.OrdinalIgnoreCase))
+            .OrderBy(x => x.AssetCode)
+            .ToList();
+
+        if (demoAssets.Count != 10)
+        {
+            throw new InvalidOperationException(
+                $"Expected 10 demo assets, but found {demoAssets.Count}.");
+        }
+
+
         if (items.Count == 0 || locations.Count == 0 || assets.Count == 0)
         {
             throw new InvalidOperationException(
@@ -115,9 +132,7 @@ public static class OperationalHistorySeeder
 
         var assetMovements = new List<AssetMovement>();
 
-        var assetCodes = assets.Keys
-            .OrderBy(x => x)
-            .ToList();
+        var assetCodes = demoAssets.Select(x => x.AssetCode).ToList();
 
         for (var i = 0; i < assetCodes.Count; i++)
         {

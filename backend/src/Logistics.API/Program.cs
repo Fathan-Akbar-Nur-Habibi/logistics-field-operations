@@ -5,6 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Logistics.Application.Interfaces.Inventory;
 using Logistics.Application.Services.Inventory;
 using Logistics.Infrastructure.Persistence.Repositories.Inventory;
+using Logistics.Application.Interfaces.Asset;
+using Logistics.Infrastructure.Persistence.Repositories.Asset;
+using Logistics.Application.Services.Asset;
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -19,6 +22,9 @@ builder.Services.AddDbContext<LogisticsDbContext>(options => options.UseNpgsql(b
 );
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
+builder.Services.AddScoped<IAssetRepository, AssetRepository>();
+builder.Services.AddScoped<IAssetRepository, AssetRepository>();
+builder.Services.AddScoped<IAssetService, AssetService>();
 var app = builder.Build();
 
 
