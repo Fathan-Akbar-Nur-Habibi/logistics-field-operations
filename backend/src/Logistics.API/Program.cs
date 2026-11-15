@@ -11,6 +11,9 @@ using Logistics.Application.Services.Asset;
 using Logistics.Application.Interfaces.Maintenance;
 using Logistics.Application.Services.Maintenance;
 using Logistics.Infrastructure.Persistence.Repositories.Maintenance;
+using Logistics.Application.Interfaces.Crew;
+using Logistics.Application.Services.Crew;
+using Logistics.Infrastructure.Persistence.Repositories.Crew;
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -31,6 +34,11 @@ builder.Services.AddScoped<IAssetService, AssetService>();
 // Maintenance
 builder.Services.AddScoped<IMaintenanceRepository, MaintenanceRepository>();
 builder.Services.AddScoped<IMaintenanceService, MaintenanceService>();
+// Crew Management
+builder.Services.AddScoped<ICrewRepository, CrewRepository>();
+builder.Services.AddScoped<ICrewService, CrewService>();
+builder.Services.AddScoped<IShiftRepository, ShiftRepository>();
+builder.Services.AddScoped<IShiftService, ShiftService>();
 var app = builder.Build();
 
 
