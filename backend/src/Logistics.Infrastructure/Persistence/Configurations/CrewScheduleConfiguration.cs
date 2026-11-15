@@ -44,14 +44,12 @@ public class CrewScheduleConfiguration : IEntityTypeConfiguration<CrewSchedule>
             .HasForeignKey(x => x.LocationId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // Mencegah karyawan dijadwalkan dua kali
-        // pada shift yang sama di tanggal yang sama.
         builder.HasIndex(x => new
         {
             x.EmployeeId,
-            x.ShiftId,
             x.WorkDate
-        }).IsUnique();
+        })
+.IsUnique();
 
         builder.HasIndex(x => x.ShiftId);
 

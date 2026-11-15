@@ -42,6 +42,9 @@ builder.Services.AddScoped<IShiftService, ShiftService>();
 // Crew Schedule
 builder.Services.AddScoped<ICrewScheduleRepository, CrewScheduleRepository>();
 builder.Services.AddScoped<ICrewScheduleService, CrewScheduleService>();
+// Field Assignment
+builder.Services.AddScoped<IFieldAssignmentRepository, FieldAssignmentRepository>();
+builder.Services.AddScoped<IFieldAssignmentService, FieldAssignmentService>();
 var app = builder.Build();
 
 

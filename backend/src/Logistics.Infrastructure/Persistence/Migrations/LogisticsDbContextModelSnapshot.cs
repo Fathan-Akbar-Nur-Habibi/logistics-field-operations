@@ -297,7 +297,7 @@ namespace Logistics.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("WorkDate");
 
-                    b.HasIndex("EmployeeId", "ShiftId", "WorkDate")
+                    b.HasIndex("EmployeeId", "WorkDate")
                         .IsUnique();
 
                     b.ToTable("crew_schedules", (string)null);
