@@ -39,6 +39,9 @@ builder.Services.AddScoped<ICrewRepository, CrewRepository>();
 builder.Services.AddScoped<ICrewService, CrewService>();
 builder.Services.AddScoped<IShiftRepository, ShiftRepository>();
 builder.Services.AddScoped<IShiftService, ShiftService>();
+// Crew Schedule
+builder.Services.AddScoped<ICrewScheduleRepository, CrewScheduleRepository>();
+builder.Services.AddScoped<ICrewScheduleService, CrewScheduleService>();
 var app = builder.Build();
 
 
