@@ -14,6 +14,9 @@ using Logistics.Infrastructure.Persistence.Repositories.Maintenance;
 using Logistics.Application.Interfaces.Crew;
 using Logistics.Application.Services.Crew;
 using Logistics.Infrastructure.Persistence.Repositories.Crew;
+using Logistics.Application.Interfaces.Logistics;
+using Logistics.Application.Services.Logistics;
+using Logistics.Infrastructure.Persistence.Repositories.Logistics;
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -45,6 +48,9 @@ builder.Services.AddScoped<ICrewScheduleService, CrewScheduleService>();
 // Field Assignment
 builder.Services.AddScoped<IFieldAssignmentRepository, FieldAssignmentRepository>();
 builder.Services.AddScoped<IFieldAssignmentService, FieldAssignmentService>();
+// Logistics
+builder.Services.AddScoped<IShipmentRepository, ShipmentRepository>();
+builder.Services.AddScoped<IShipmentService, ShipmentService>();
 var app = builder.Build();
 
 
